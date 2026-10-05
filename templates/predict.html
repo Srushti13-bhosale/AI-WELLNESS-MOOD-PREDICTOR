@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>New Wellness Prediction</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:linear-gradient(135deg,#5b4bdb,#8b5cf6);
+    padding:35px 15px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    border-radius:25px;
+    padding:35px;
+    box-shadow:0 20px 55px rgba(0,0,0,.18);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    margin:0;
+    color:#25213f;
+    font-size:30px;
+}
+
+.header p{
+    color:#64748b;
+    margin-top:8px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+}
+
+.field label{
+    font-weight:800;
+    color:#334155;
+    margin-bottom:8px;
+}
+
+.field select{
+    width:100%;
+    padding:13px;
+    border:1px solid #dbe1ea;
+    border-radius:12px;
+    background:#f8fafc;
+    font-size:15px;
+    outline:none;
+}
+
+.field select:focus{
+    border-color:#6d5ce7;
+    box-shadow:0 0 0 3px rgba(109,92,231,.12);
+}
+
+.field small{
+    color:#94a3b8;
+    margin-top:6px;
+    font-size:11px;
+}
+
+.split{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.predict-btn{
+    width:100%;
+    margin-top:30px;
+    border:0;
+    padding:15px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#5b4bdb,#8b5cf6);
+    color:white;
+    font-size:17px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.predict-btn:hover{
+    opacity:.93;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:16px;
+    color:#5b4bdb;
+    text-decoration:none;
+    font-weight:800;
+}
+
+.info{
+    margin-top:22px;
+    padding:15px;
+    border-radius:14px;
+    background:#f5f3ff;
+    color:#5b4bdb;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.flash{
+    padding:12px 15px;
+    margin-bottom:20px;
+    border-radius:12px;
+    background:#fff7ed;
+    color:#c2410c;
+    border:1px solid #fed7aa;
+}
+
+@media(max-width:650px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .card{
+        padding:24px;
+    }
+
+    .header h1{
+        font-size:25px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="header">
+
+<h1>
+✨ New Wellness Prediction
+</h1>
+
+<p>
+Enter your daily wellness information to predict your mood.
+</p>
+
+</div>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+
+{% for category,message in messages %}
+
+<div class="flash">
+{{ message }}
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+
+<form method="POST"
+action="{{ url_for('predict') }}">
+
+
+<div class="form-grid">
+
+
+<!-- SLEEP -->
+
+<div class="field">
+
+<label>
+😴 Sleep Hours
+</label>
+
+<select name="sleep_hours" required>
+
+<option value="">
+Select hours
+</option>
+
+{% for i in range(1,13) %}
+
+<option value="{{ i }}">
+{{ i }} hour{% if i != 1 %}s{% endif %}
+</option>
+
+{% endfor %}
+
+</select>
+
+<small>
+Select your total sleep duration.
+</small>
+
+</div>
+
+
+<!-- STRESS -->
+
+<div class="field">
+
+<label>
+🧘 Stress Level
+</label>
+
+<select name="stress_level" required>
+
+<option value="">
+Select level
+</option>
+
+{% for i in range(1,11) %}
+
+<option value="{{ i }}">
+{{ i }} / 10
+</option>
+
+{% endfor %}
+
+</select>
+
+<small>
+1 = low stress, 10 = very high stress.
+</small>
+
+</div>
+
+
+<!-- SCREEN -->
+
+<div class="field">
+
+<label>
+📱 Screen Time
+</label>
+
+<div class="split">
+
+<select name="screen_hours" required>
+
+<option value="">
+Hours
+</option>
+
+{% for i in range(0,13) %}
+
+<option value="{{ i }}">
+{{ i }} hr
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<select name="screen_minutes" required>
+
+<option value="">
+Minutes
+</option>
+
+{% for i in range(0,60) %}
+
+<option value="{{ i }}">
+{{ i }} min
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<small>
+Enter hours and minutes separately.
+</small>
+
+</div>
+
+
+<!-- EXERCISE -->
+
+<div class="field">
+
+<label>
+🏃 Exercise
+</label>
+
+<div class="split">
+
+<select name="exercise_hours" required>
+
+<option value="">
+Hours
+</option>
+
+{% for i in range(0,13) %}
+
+<option value="{{ i }}">
+{{ i }} hr
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<select name="exercise_minutes" required>
+
+<option value="">
+Minutes
+</option>
+
+{% for i in range(0,60) %}
+
+<option value="{{ i }}">
+{{ i }} min
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<small>
+Enter exercise duration.
+</small>
+
+</div>
+
+
+<!-- ENERGY -->
+
+<div class="field">
+
+<label>
+⚡ Energy Level
+</label>
+
+<select name="energy_level" required>
+
+<option value="">
+Select level
+</option>
+
+{% for i in range(1,11) %}
+
+<option value="{{ i }}">
+{{ i }} / 10
+</option>
+
+{% endfor %}
+
+</select>
+
+<small>
+1 = very low energy, 10 = very high energy.
+</small>
+
+</div>
+
+
+</div>
+
+
+<button
+type="submit"
+class="predict-btn">
+
+🔮 Predict My Mood
+
+</button>
+
+</form>
+
+
+<a
+class="back"
+href="{{ url_for('dashboard') }}">
+
+← Back to Dashboard
+
+</a>
+
+
+<div class="info">
+
+💡 <strong>AI Wellness Consultant:</strong>
+
+After prediction, the application will provide your predicted mood,
+wellness score and general lifestyle suggestions based on your inputs.
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

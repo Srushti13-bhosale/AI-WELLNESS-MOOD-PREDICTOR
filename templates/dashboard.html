@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Wellness Mood Predictor - Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f6f4fb;
+            color: #29243a;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: linear-gradient(135deg, #6c4ce8, #8d6bea);
+            color: white;
+            padding: 22px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 5px 18px rgba(74, 53, 140, 0.18);
+        }
+
+        .header-left h1 {
+            font-size: 25px;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .header-btn {
+            text-decoration: none;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.13);
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-size: 13px;
+            transition: 0.25s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 25px 50px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            font-size: 27px;
+            color: #30264a;
+            margin-bottom: 6px;
+        }
+
+        .welcome p {
+            color: #77718a;
+            font-size: 14px;
+        }
+
+        /* ================= STAT CARDS ================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 18px 14px;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            border: 1px solid #ebe7f4;
+            box-shadow: 0 5px 16px rgba(54, 40, 100, 0.07);
+            transition: 0.25s ease;
+            min-height: 135px;
+        }
+
+        .stat-card:visited {
+            color: inherit;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(88, 67, 170, 0.16);
+            border-color: #d8cff7;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: #f0ebff;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .stat-title {
+            font-size: 12px;
+            color: #817a94;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 21px;
+            font-weight: 700;
+            color: #30264a;
+        }
+
+        /* ================= GOALS ================= */
+
+        .goals-section {
+            background: white;
+            border-radius: 18px;
+            padding: 23px;
+            margin-bottom: 25px;
+            border: 1px solid #ebe7f4;
+            box-shadow: 0 5px 18px rgba(54, 40, 100, 0.07);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goals-section::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #6c4ce8, #a58bf3);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title h3 {
+            font-size: 20px;
+            color: #30264a;
+        }
+
+        .manage-btn {
+            text-decoration: none;
+            background: #f0ebff;
+            color: #6545d5;
+            padding: 9px 14px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .manage-btn:hover {
+            background: #e4dcff;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+
+        .goal-card {
+            background: #faf9fd;
+            border: 1px solid #eeeaf6;
+            border-radius: 13px;
+            padding: 16px;
+        }
+
+        .goal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .goal-name {
+            font-size: 13px;
+            color: #706a7e;
+        }
+
+        .goal-icon {
+            font-size: 18px;
+        }
+
+        .goal-value {
+            font-size: 19px;
+            font-weight: 700;
+            color: #30264a;
+            margin-bottom: 7px;
+        }
+
+        .goal-status {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .achieved {
+            color: #2d9b69;
+        }
+
+        .attention {
+            color: #db8b32;
+        }
+
+        .goal-notification {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: #fff8e9;
+            border: 1px solid #f5dfad;
+            border-radius: 10px;
+            color: #8a6420;
+            font-size: 13px;
+        }
+
+        /* ================= CHARTS ================= */
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 0.85fr 1.5fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid #ebe7f4;
+            box-shadow: 0 5px 18px rgba(54, 40, 100, 0.07);
+        }
+
+        .chart-header {
+            margin-bottom: 18px;
+        }
+
+        .chart-header h3 {
+            color: #30264a;
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .chart-header p {
+            color: #858092;
+            font-size: 12px;
+        }
+
+        .chart-wrapper {
+            height: 310px;
+            position: relative;
+        }
+
+        .pie-wrapper {
+            height: 310px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ================= HISTORY ================= */
+
+        .history-section {
+            background: white;
+            border-radius: 18px;
+            padding: 23px;
+            border: 1px solid #ebe7f4;
+            box-shadow: 0 5px 18px rgba(54, 40, 100, 0.07);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .history-header h3 {
+            font-size: 20px;
+            color: #30264a;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-text {
+            font-size: 12px;
+            color: #766e85;
+            background: #f5f2fb;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .show-all-btn {
+            border: none;
+            background: #6c4ce8;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .show-all-btn:hover {
+            background: #5738cb;
+            transform: translateY(-1px);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            background: #f5f2fb;
+            color: #625b73;
+            font-size: 12px;
+            text-align: left;
+            padding: 13px 12px;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #eeeaf4;
+            font-size: 13px;
+            color: #4d4758;
+        }
+
+        tbody tr {
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #faf9fd;
+        }
+
+        .mood-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #f1edff;
+            color: #6244ce;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .wellness-score {
+            font-weight: 700;
+            color: #5f43cc;
+        }
+
+        /* Selected row from line graph */
+
+        tr.highlight-row {
+            background: #eee9ff !important;
+            box-shadow: inset 4px 0 0 #6c4ce8;
+        }
+
+        tr.highlight-row td {
+            font-weight: 600;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty-message {
+            text-align: center;
+            padding: 35px;
+            color: #8a8495;
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1250px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .goals-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 900px) {
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .goals-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-right {
+                justify-content: flex-start;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 0 15px 35px;
+                margin-top: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h2 {
+                font-size: 23px;
+            }
+
+            .header {
+                padding: 18px;
+            }
+
+            .header-right {
+                width: 100%;
+            }
+
+            .header-btn {
+                flex: 1;
+                text-align: center;
+            }
+
+            .charts-grid {
+                gap: 15px;
+            }
+
+            .chart-wrapper,
+            .pie-wrapper {
+                height: 270px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <h1>🌿 AI Wellness Mood Predictor</h1>
+
+        <p>
+            Track your wellness, understand your mood and build healthier habits.
+        </p>
+
+    </div>
+
+    <div class="header-right">
+
+        <a href="{{ url_for('predict') }}" class="header-btn">
+            ＋ New Prediction
+        </a>
+
+        <a href="{{ url_for('goals') }}" class="header-btn">
+            🎯 Set Goals
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="header-btn logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+    <!-- Welcome -->
+
+    <div class="welcome">
+
+        <h2>
+            Welcome, {{ user_name }} 👋
+        </h2>
+
+        <p>
+            Here's a quick overview of your wellness journey.
+        </p>
+
+    </div>
+
+
+    <!-- ================= 7 STAT CARDS ================= -->
+
+    <div class="stats-grid">
+
+        <a href="{{ url_for('insights', type='predictions') }}"
+           class="stat-card">
+
+            <div class="stat-icon">📊</div>
+
+            <div class="stat-title">
+                Predictions
+            </div>
+
+            <div class="stat-value">
+                {{ total_predictions }}
+            </div>
+
+        </a>
+
+
+        <a href="{{ url_for('insights', type='wellness') }}"
+           class="stat-card">
+
+            <div class="stat-icon">💜</div>
+
+            <div class="stat-title">
+                Avg Wellness
+            </div>
+
+            <div class="stat-value">
+                {{ "%.1f"|format(avg_wellness|float) }}%
+            </div>
+
+        </a>
+
+
+        <a href="{{ url_for('insights', type='sleep') }}"
+           class="stat-card">
+
+            <div class="stat-icon">😴</div>
+
+            <div class="stat-title">
+                Avg Sleep
+            </div>
+
+            <div class="stat-value">
+                {{ "%.1f"|format(avg_sleep|float) }} h
+            </div>
+
+        </a>
+
+
+        <a href="{{ url_for('insights', type='stress') }}"
+           class="stat-card">
+
+            <div class="stat-icon">🧘</div>
+
+            <div class="stat-title">
+                Avg Stress
+            </div>
+
+            <div class="stat-value">
+                {{ "%.1f"|format(avg_stress|float) }}/10
+            </div>
+
+        </a>
+
+
+        <a href="{{ url_for('insights', type='screen') }}"
+           class="stat-card">
+
+            <div class="stat-icon">📱</div>
+
+            <div class="stat-title">
+                Avg Screen Time
+            </div>
+
+            <div class="stat-value">
+                {{ "%.1f"|format(avg_screen|float) }} h
+            </div>
+
+        </a>
+
+
+        <a href="{{ url_for('insights', type='exercise') }}"
+           class="stat-card">
+
+            <div class="stat-icon">🏃</div>
+
+            <div class="stat-title">
+                Avg Exercise
+            </div>
+
+            <div class="stat-value">
+                {{ "%.1f"|format(avg_exercise|float) }} min
+            </div>
+
+        </a>
+
+
+        <a href="{{ url_for('insights', type='energy') }}"
+           class="stat-card">
+
+            <div class="stat-icon">⚡</div>
+
+            <div class="stat-title">
+                Avg Energy
+            </div>
+
+            <div class="stat-value">
+                {{ "%.1f"|format(avg_energy|float) }}/10
+            </div>
+
+        </a>
+
+    </div>
+
+
+    <!-- ================= WELLNESS GOALS ================= -->
+
+    <section class="goals-section">
+
+        <div class="section-header">
+
+            <div class="section-title">
+
+                <span style="font-size:22px;">🎯</span>
+
+                <h3>
+                    Wellness Goals
+                </h3>
+
+            </div>
+
+            <a href="{{ url_for('goals') }}"
+               class="manage-btn">
+
+                Manage Goals →
+
+            </a>
+
+        </div>
+
+
+        <div class="goals-grid">
+
+            <!-- Sleep -->
+
+            <div class="goal-card">
+
+                <div class="goal-top">
+
+                    <span class="goal-name">
+                        Sleep
+                    </span>
+
+                    <span class="goal-icon">
+                        😴
+                    </span>
+
+                </div>
+
+                <div class="goal-value">
+
+                    {{ "%.1f"|format(goals["sleep_goal"]|float) }} h
+
+                </div>
+
+                {% if 'sleep' in achieved_goals %}
+
+                    <div class="goal-status achieved">
+                        ✓ Goal Achieved
+                    </div>
+
+                {% else %}
+
+                    <div class="goal-status attention">
+                        ↑ Needs Attention
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Exercise -->
+
+            <div class="goal-card">
+
+                <div class="goal-top">
+
+                    <span class="goal-name">
+                        Exercise
+                    </span>
+
+                    <span class="goal-icon">
+                        🏃
+                    </span>
+
+                </div>
+
+                <div class="goal-value">
+
+                    {{ "%.1f"|format(goals["exercise_goal"]|float) }} min
+
+                </div>
+
+                {% if 'exercise' in achieved_goals %}
+
+                    <div class="goal-status achieved">
+                        ✓ Goal Achieved
+                    </div>
+
+                {% else %}
+
+                    <div class="goal-status attention">
+                        ↑ Needs Attention
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Screen -->
+
+            <div class="goal-card">
+
+                <div class="goal-top">
+
+                    <span class="goal-name">
+                        Screen Time
+                    </span>
+
+                    <span class="goal-icon">
+                        📱
+                    </span>
+
+                </div>
+
+                <div class="goal-value">
+
+                    {{ "%.1f"|format(goals["screen_time_goal"]|float) }} h
+
+                </div>
+
+                {% if 'screen' in achieved_goals %}
+
+                    <div class="goal-status achieved">
+                        ✓ Goal Achieved
+                    </div>
+
+                {% else %}
+
+                    <div class="goal-status attention">
+                        ↑ Needs Attention
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Stress -->
+
+            <div class="goal-card">
+
+                <div class="goal-top">
+
+                    <span class="goal-name">
+                        Stress
+                    </span>
+
+                    <span class="goal-icon">
+                        🧘
+                    </span>
+
+                </div>
+
+                <div class="goal-value">
+
+                    {{ "%.1f"|format(goals["stress_goal"]|float) }}/10
+
+                </div>
+
+                {% if 'stress' in achieved_goals %}
+
+                    <div class="goal-status achieved">
+                        ✓ Goal Achieved
+                    </div>
+
+                {% else %}
+
+                    <div class="goal-status attention">
+                        ↑ Needs Attention
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Energy -->
+
+            <div class="goal-card">
+
+                <div class="goal-top">
+
+                    <span class="goal-name">
+                        Energy
+                    </span>
+
+                    <span class="goal-icon">
+                        ⚡
+                    </span>
+
+                </div>
+
+                <div class="goal-value">
+
+                    {{ "%.1f"|format(goals["energy_goal"]|float) }}/10
+
+                </div>
+
+                {% if 'energy' in achieved_goals %}
+
+                    <div class="goal-status achieved">
+                        ✓ Goal Achieved
+                    </div>
+
+                {% else %}
+
+                    <div class="goal-status attention">
+                        ↑ Needs Attention
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        {% if goal_notifications %}
+
+            {% for notification in goal_notifications %}
+
+                <div class="goal-notification">
+                    🔔 {{ notification }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ================= CHARTS ================= -->
+
+    <div class="charts-grid">
+
+
+        <!-- MOOD PIE -->
+
+        <section class="chart-card">
+
+            <div class="chart-header">
+
+                <h3>
+                    Mood Distribution
+                </h3>
+
+                <p>
+                    Click a mood to filter prediction history
+                </p>
+
+            </div>
+
+            <div class="pie-wrapper">
+
+                <canvas id="moodChart"></canvas>
+
+            </div>
+
+        </section>
+
+
+        <!-- WELLNESS LINE -->
+
+        <section class="chart-card">
+
+            <div class="chart-header">
+
+                <h3>
+                    Wellness Score Trend
+                </h3>
+
+                <p>
+                    Click any point to find that prediction in history
+                </p>
+
+            </div>
+
+            <div class="chart-wrapper">
+
+                <canvas id="wellnessChart"></canvas>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ================= HISTORY ================= -->
+
+    <section class="history-section">
+
+        <div class="history-header">
+
+            <h3>
+                Prediction History
+            </h3>
+
+            <div class="history-actions">
+
+                <span id="filterText"
+                      class="filter-text">
+
+                    Showing all predictions
+
+                </span>
+
+                <button class="show-all-btn"
+                        onclick="showAllRows()">
+
+                    Show All Predictions
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            {% if predictions %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Time
+                        </th>
+
+                        <th>
+                            Mood
+                        </th>
+
+                        <th>
+                            Sleep
+                        </th>
+
+                        <th>
+                            Stress
+                        </th>
+
+                        <th>
+                            Screen Time
+                        </th>
+
+                        <th>
+                            Exercise
+                        </th>
+
+                        <th>
+                            Energy
+                        </th>
+
+                        <th>
+                            Wellness
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for p in predictions %}
+
+                    <tr class="history-row"
+                        data-mood="{{ p['mood'] }}"
+                        data-id="{{ p['id'] }}">
+
+                        <td>
+                            {{ p['prediction_date'] }}
+                        </td>
+
+                        <td>
+                            {{ p['prediction_time'] or '-' }}
+                        </td>
+
+                        <td>
+
+                            <span class="mood-badge">
+
+                                {% if p['mood'] == 'Happy' %}
+                                    😊
+                                {% elif p['mood'] == 'Sad' %}
+                                    😢
+                                {% elif p['mood'] == 'Angry' %}
+                                    😠
+                                {% elif p['mood'] == 'Tired' %}
+                                    😴
+                                {% elif p['mood'] == 'Anxious' %}
+                                    😟
+                                {% else %}
+                                    😐
+                                {% endif %}
+
+                                {{ p['mood'] }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+                            {{ "%.1f"|format(p['sleep_hours']|float) }} h
+                        </td>
+
+                        <td>
+                            {{ "%.1f"|format(p['stress_level']|float) }}/10
+                        </td>
+
+                        <!-- SCREEN TIME FIX -->
+
+                        <td>
+                            {{ "%.1f"|format(p['screen_time']|float) }} h
+                        </td>
+
+                        <td>
+                            {{ "%.1f"|format(p['exercise_minutes']|float) }} min
+                        </td>
+
+                        <td>
+                            {% if p['energy_level'] is not none %}
+                                {{ "%.1f"|format(p['energy_level']|float) }}/10
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td class="wellness-score">
+                            {{ "%.1f"|format(p['wellness_score']|float) }}%
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+                <div class="empty-message">
+
+                    📋 No predictions available yet.
+
+                    <br><br>
+
+                    Create your first wellness prediction to see your history.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+    /* =====================================================
+       MOOD CHART
+    ===================================================== */
+
+    const moodLabels = {{ mood_labels | tojson }};
+    const moodValues = {{ mood_values | tojson }};
+
+
+    const moodCanvas =
+        document.getElementById("moodChart");
+
+
+    const centerTextPlugin = {
+
+        id: "centerText",
+
+        afterDraw(chart) {
+
+            const {
+                ctx,
+                chartArea
+            } = chart;
+
+            if (!chartArea) return;
+
+            const centerX =
+                (chartArea.left + chartArea.right) / 2;
+
+            const centerY =
+                (chartArea.top + chartArea.bottom) / 2;
+
+            ctx.save();
+
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            ctx.font =
+                "700 25px Segoe UI";
+
+            ctx.fillStyle =
+                "#30264a";
+
+            ctx.fillText(
+                "{{ total_predictions }}",
+                centerX,
+                centerY - 8
+            );
+
+            ctx.font =
+                "12px Segoe UI";
+
+            ctx.fillStyle =
+                "#888197";
+
+            ctx.fillText(
+                "Predictions",
+                centerX,
+                centerY + 16
+            );
+
+            ctx.restore();
+        }
+
+    };
+
+
+    const moodChart =
+        new Chart(moodCanvas, {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: moodLabels,
+
+                datasets: [{
+
+                    data: moodValues,
+
+                    backgroundColor: [
+
+                        "#7C5CFC",
+                        "#FF7A90",
+                        "#FFB84D",
+                        "#55C7A5",
+                        "#6FA8FF",
+                        "#C084FC"
+
+                    ],
+
+                    borderColor: "#ffffff",
+
+                    borderWidth: 4,
+
+                    hoverOffset: 12,
+
+                    spacing: 3
+
+                }]
+
+            },
+
+            plugins: [centerTextPlugin],
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                animation: {
+
+                    animateRotate: true,
+
+                    animateScale: true,
+
+                    duration: 900
+
+                },
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+
+                            usePointStyle: true,
+
+                            pointStyle: "circle",
+
+                            padding: 17,
+
+                            color: "#625b73",
+
+                            font: {
+
+                                size: 12,
+
+                                weight: "600"
+
+                            }
+
+                        }
+
+                    },
+
+                    tooltip: {
+
+                        backgroundColor: "#30264a",
+
+                        padding: 12,
+
+                        cornerRadius: 10,
+
+                        displayColors: true,
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                const value =
+                                    context.raw;
+
+                                const total =
+                                    context.dataset.data
+                                    .reduce(
+                                        (a, b) => a + b,
+                                        0
+                                    );
+
+                                const percentage =
+                                    total
+                                    ? ((value / total) * 100)
+                                      .toFixed(1)
+                                    : 0;
+
+                                return (
+                                    " " +
+                                    context.label +
+                                    ": " +
+                                    value +
+                                    " (" +
+                                    percentage +
+                                    "%)"
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                onClick: function(event, elements) {
+
+                    if (!elements.length) {
+
+                        showAllRows();
+
+                        return;
+
+                    }
+
+                    const index =
+                        elements[0].index;
+
+                    const selectedMood =
+                        moodLabels[index];
+
+                    filterHistory(selectedMood);
+
+                }
+
+            }
+
+        });
+
+
+    /* =====================================================
+       WELLNESS LINE CHART
+    ===================================================== */
+
+    const trendLabels =
+        {{ trend_labels | tojson }};
+
+    const trendValues =
+        {{ trend_values | tojson }};
+
+    const trendIds =
+        {{ trend_ids | tojson }};
+
+
+    const lineCanvas =
+        document.getElementById("wellnessChart");
+
+    const lineCtx =
+        lineCanvas.getContext("2d");
+
+
+    const gradient =
+        lineCtx.createLinearGradient(
+            0,
+            0,
+            0,
+            320
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(108, 76, 232, 0.30)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(108, 76, 232, 0.02)"
+    );
+
+
+    const wellnessChart =
+        new Chart(lineCanvas, {
+
+            type: "line",
+
+            data: {
+
+                labels: trendLabels,
+
+                datasets: [{
+
+                    label: "Wellness Score",
+
+                    data: trendValues,
+
+                    borderColor: "#6c4ce8",
+
+                    backgroundColor: gradient,
+
+                    borderWidth: 3,
+
+                    fill: true,
+
+                    tension: 0.42,
+
+                    pointRadius: 5,
+
+                    pointHoverRadius: 8,
+
+                    pointBackgroundColor: "#ffffff",
+
+                    pointBorderColor: "#6c4ce8",
+
+                    pointBorderWidth: 3,
+
+                    pointHoverBackgroundColor: "#6c4ce8",
+
+                    pointHoverBorderColor: "#ffffff",
+
+                    pointHoverBorderWidth: 3
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                interaction: {
+
+                    mode: "nearest",
+
+                    intersect: true
+
+                },
+
+                animation: {
+
+                    duration: 1000,
+
+                    easing: "easeOutQuart"
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        max: 100,
+
+                        ticks: {
+
+                            color: "#837d91",
+
+                            callback: function(value) {
+
+                                return value + "%";
+
+                            }
+
+                        },
+
+                        grid: {
+
+                            color: "rgba(90, 70, 130, 0.08)"
+
+                        }
+
+                    },
+
+                    x: {
+
+                        ticks: {
+
+                            color: "#837d91",
+
+                            maxRotation: 0
+
+                        },
+
+                        grid: {
+
+                            display: false
+
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    },
+
+                    tooltip: {
+
+                        backgroundColor: "#30264a",
+
+                        titleColor: "#ffffff",
+
+                        bodyColor: "#ffffff",
+
+                        padding: 12,
+
+                        cornerRadius: 10,
+
+                        displayColors: false,
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return (
+                                    "Wellness Score: " +
+                                    Number(
+                                        context.raw
+                                    ).toFixed(1) +
+                                    "%"
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                onClick: function(event, elements) {
+
+                    if (!elements.length) {
+                        return;
+                    }
+
+                    const index =
+                        elements[0].index;
+
+                    const predictionId =
+                        trendIds[index];
+
+                    highlightHistoryRow(
+                        predictionId
+                    );
+
+                }
+
+            }
+
+        });
+
+
+    /* =====================================================
+       FILTER HISTORY BY MOOD
+    ===================================================== */
+
+    function filterHistory(mood) {
+
+        const rows =
+            document.querySelectorAll(
+                ".history-row"
+            );
+
+        let visibleCount = 0;
+
+
+        rows.forEach(function(row) {
+
+            const rowMood =
+                row.dataset.mood;
+
+            if (
+                rowMood &&
+                rowMood.toLowerCase() ===
+                mood.toLowerCase()
+            ) {
+
+                row.style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        document.getElementById(
+            "filterText"
+        ).textContent =
+            "Showing " +
+            visibleCount +
+            " " +
+            mood +
+            " prediction(s)";
+
+    }
+
+
+    /* =====================================================
+       SHOW ALL PREDICTIONS
+    ===================================================== */
+
+    function showAllRows() {
+
+        const rows =
+            document.querySelectorAll(
+                ".history-row"
+            );
+
+
+        rows.forEach(function(row) {
+
+            row.style.display = "";
+
+            row.classList.remove(
+                "highlight-row"
+            );
+
+        });
+
+
+        document.getElementById(
+            "filterText"
+        ).textContent =
+            "Showing all predictions";
+
+    }
+
+
+    /* =====================================================
+       HIGHLIGHT EXACT PREDICTION
+    ===================================================== */
+
+    function highlightHistoryRow(id) {
+
+        const rows =
+            document.querySelectorAll(
+                ".history-row"
+            );
+
+
+        rows.forEach(function(row) {
+
+            row.classList.remove(
+                "highlight-row"
+            );
+
+        });
+
+
+        const selected =
+            document.querySelector(
+                '.history-row[data-id="' +
+                id +
+                '"]'
+            );
+
+
+        if (selected) {
+
+            /*
+             * Make sure the selected row
+             * becomes visible even if
+             * a mood filter was active.
+             */
+
+            selected.style.display = "";
+
+            selected.classList.add(
+                "highlight-row"
+            );
+
+
+            selected.scrollIntoView({
+
+                behavior: "smooth",
+
+                block: "center"
+
+            });
+
+
+            /*
+             * Remove highlight after
+             * a few seconds.
+             */
+
+            setTimeout(function() {
+
+                selected.classList.remove(
+                    "highlight-row"
+                );
+
+            }, 3500);
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CLICK HISTORY ROW
+    ===================================================== */
+
+    document.querySelectorAll(
+        ".history-row"
+    ).forEach(function(row) {
+
+        row.style.cursor = "pointer";
+
+
+        row.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .querySelectorAll(
+                        ".history-row"
+                    )
+                    .forEach(function(r) {
+
+                        r.classList.remove(
+                            "highlight-row"
+                        );
+
+                    });
+
+
+                row.classList.add(
+                    "highlight-row"
+                );
+
+            }
+        );
+
+    });
+
+</script>
+
+</body>
+</html>

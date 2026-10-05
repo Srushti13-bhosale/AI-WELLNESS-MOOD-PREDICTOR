@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Wellness Mood Predictor</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+
+            min-height: 100vh;
+
+            background: linear-gradient(
+                135deg,
+                #dff6ff,
+                #f4e7ff,
+                #e8fff1
+            );
+
+            color: #333;
+        }
+
+
+        /* ---------------- NAVBAR ---------------- */
+
+        .navbar {
+            width: 100%;
+
+            padding: 20px 7%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            background: rgba(255, 255, 255, 0.75);
+
+            backdrop-filter: blur(10px);
+
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .logo {
+            font-size: 24px;
+
+            font-weight: bold;
+
+            color: #6c63ff;
+        }
+
+        .nav-buttons {
+            display: flex;
+
+            gap: 12px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+
+            padding: 10px 20px;
+
+            border-radius: 25px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.3s;
+        }
+
+        .login {
+            color: #6c63ff;
+
+            background: white;
+
+            border: 1px solid #6c63ff;
+        }
+
+        .register {
+            color: white;
+
+            background: #6c63ff;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 6px 15px
+                rgba(0, 0, 0, 0.12);
+        }
+
+
+        /* ---------------- HERO ---------------- */
+
+        .hero {
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding: 80px 25px 60px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .tag {
+            display: inline-block;
+
+            background: white;
+
+            color: #6c63ff;
+
+            padding: 8px 15px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 5px 15px
+                rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            font-size: 48px;
+
+            line-height: 1.15;
+
+            margin-bottom: 20px;
+
+            color: #333;
+        }
+
+        h1 span {
+            color: #6c63ff;
+        }
+
+        .hero-text p {
+            font-size: 18px;
+
+            line-height: 1.7;
+
+            color: #666;
+
+            max-width: 600px;
+
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+        .main-btn {
+            display: inline-block;
+
+            padding: 15px 28px;
+
+            border-radius: 30px;
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            transition: 0.3s;
+        }
+
+        .start-btn {
+            background: #6c63ff;
+
+            color: white;
+        }
+
+        .learn-btn {
+            background: white;
+
+            color: #555;
+        }
+
+        .main-btn:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 18px
+                rgba(0,0,0,0.15);
+        }
+
+
+        /* ---------------- HERO CARD ---------------- */
+
+        .hero-card {
+            width: 360px;
+
+            background: white;
+
+            border-radius: 30px;
+
+            padding: 35px;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 45px
+                rgba(0,0,0,0.12);
+        }
+
+        .big-icon {
+            font-size: 80px;
+
+            margin-bottom: 15px;
+        }
+
+        .hero-card h2 {
+            color: #333;
+
+            margin-bottom: 10px;
+        }
+
+        .hero-card p {
+            color: #777;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+        }
+
+        .mood-icons {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            margin-top: 25px;
+
+            font-size: 28px;
+        }
+
+
+        /* ---------------- FEATURES ---------------- */
+
+        .features {
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding: 30px 25px 70px;
+        }
+
+        .section-title {
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #777;
+
+            font-size: 15px;
+        }
+
+        .feature-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 10px 25px
+                rgba(0,0,0,0.08);
+
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 15px 30px
+                rgba(0,0,0,0.12);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+
+            color: #444;
+        }
+
+        .feature-card p {
+            color: #777;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+        }
+
+
+        /* ---------------- HOW IT WORKS ---------------- */
+
+        .how {
+            background: rgba(255,255,255,0.55);
+
+            padding: 60px 25px;
+        }
+
+        .steps {
+            max-width: 900px;
+
+            margin: 35px auto 0;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+        .step {
+            text-align: center;
+
+            padding: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+
+            height: 50px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 50%;
+
+            background: #6c63ff;
+
+            color: white;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-weight: bold;
+
+            font-size: 18px;
+        }
+
+        .step h3 {
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: #777;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #888;
+
+            font-size: 13px;
+        }
+
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 800px) {
+
+            .hero {
+                flex-direction: column;
+
+                text-align: center;
+
+                padding-top: 55px;
+            }
+
+            .hero-text p {
+                margin-left: auto;
+
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .feature-grid,
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+
+            .hero-card {
+                width: 100%;
+
+                max-width: 380px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .nav-buttons {
+                gap: 6px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+
+                font-size: 12px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌿 AI Wellness
+        </div>
+
+        <div class="nav-buttons">
+
+            <a href="/login"
+               class="nav-btn login">
+                Login
+            </a>
+
+            <a href="/register"
+               class="nav-btn register">
+                Create Account
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-text">
+
+            <span class="tag">
+                🤖 AI-Powered Wellness
+            </span>
+
+            <h1>
+                Understand Your
+                <span>Mood</span> Better.
+            </h1>
+
+            <p>
+                AI Wellness Mood Predictor helps you understand
+                your daily mood using your sleep, stress,
+                screen time, exercise and energy levels.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="/register"
+                   class="main-btn start-btn">
+                    🌱 Get Started
+                </a>
+
+                <a href="/login"
+                   class="main-btn learn-btn">
+                    🔐 Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO CARD -->
+
+        <div class="hero-card">
+
+            <div class="big-icon">
+                🧠
+            </div>
+
+            <h2>
+                Your Wellness Matters
+            </h2>
+
+            <p>
+                Enter your daily wellness information
+                and let our machine-learning model
+                predict your mood.
+            </p>
+
+            <div class="mood-icons">
+
+                😊 😐 😟 😰 😠
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="features">
+
+        <div class="section-title">
+
+            <h2>
+                What Our App Does
+            </h2>
+
+            <p>
+                Simple tools to help you understand your daily wellness.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    AI Mood Prediction
+                </h3>
+
+                <p>
+                    Our machine-learning model analyzes
+                    your wellness information and predicts
+                    your current mood.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Prediction History
+                </h3>
+
+                <p>
+                    View your previous mood predictions
+                    and keep track of your wellness journey
+                    through your personal dashboard.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    💡
+                </div>
+
+                <h3>
+                    Wellness Suggestions
+                </h3>
+
+                <p>
+                    Receive simple wellness suggestions
+                    based on your predicted mood.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+
+    <section class="how">
+
+        <div class="section-title">
+
+            <h2>
+                How It Works
+            </h2>
+
+            <p>
+                Get your AI mood prediction in three simple steps.
+            </p>
+
+        </div>
+
+
+        <div class="steps">
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    1
+                </div>
+
+                <h3>
+                    Create Account
+                </h3>
+
+                <p>
+                    Register your account to start
+                    your wellness journey.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    2
+                </div>
+
+                <h3>
+                    Enter Information
+                </h3>
+
+                <p>
+                    Enter your sleep, stress, screen time,
+                    exercise and energy levels.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    3
+                </div>
+
+                <h3>
+                    Get Prediction
+                </h3>
+
+                <p>
+                    Our AI model predicts your mood
+                    and provides a wellness suggestion.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        AI Wellness Mood Predictor
+        • Built with Flask, MySQL & Machine Learning 🌿
+
+    </footer>
+
+
+</body>
+
+</html>

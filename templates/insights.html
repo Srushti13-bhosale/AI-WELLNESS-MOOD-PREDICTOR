@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} - AI Wellness</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f7f9ff;
+            color: #25253a;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #7c3aed
+                );
+
+            color: white;
+
+            padding: 18px 45px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            box-shadow:
+                0 5px 20px
+                rgba(99,102,241,0.25);
+
+        }
+
+        .logo {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+        }
+
+        .dashboard-btn {
+
+            text-decoration: none;
+
+            color: white;
+
+            background:
+                rgba(255,255,255,0.18);
+
+            padding: 10px 17px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+        }
+
+        .dashboard-btn:hover {
+
+            background:
+                rgba(255,255,255,0.3);
+
+        }
+
+
+        /* MAIN */
+
+        .container {
+
+            width: 92%;
+
+            max-width: 1150px;
+
+            margin: 35px auto;
+
+        }
+
+
+        /* HEADER */
+
+        .page-header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+
+        }
+
+        .page-icon {
+
+            font-size: 55px;
+
+            margin-bottom: 10px;
+
+        }
+
+        .page-header h1 {
+
+            font-size: 32px;
+
+            margin-bottom: 8px;
+
+        }
+
+        .page-header p {
+
+            color: #777;
+
+        }
+
+
+        /* AVERAGE CARD */
+
+        .average-card {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #7c3aed
+                );
+
+            color: white;
+
+            border-radius: 24px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 12px 30px
+                rgba(99,102,241,0.25);
+
+        }
+
+        .average-label {
+
+            font-size: 15px;
+
+            opacity: 0.85;
+
+            margin-bottom: 10px;
+
+        }
+
+        .average-value {
+
+            font-size: 45px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+        .average-text {
+
+            font-size: 15px;
+
+            opacity: 0.9;
+
+        }
+
+
+        /* INFO GRID */
+
+        .info-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 22px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .info-card {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(40,40,80,0.07);
+
+        }
+
+        .info-card h2 {
+
+            font-size: 19px;
+
+            margin-bottom: 12px;
+
+        }
+
+        .info-card p {
+
+            color: #666;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+
+        }
+
+
+        /* STATUS */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 9px 16px;
+
+            border-radius: 12px;
+
+            background: #eef2ff;
+
+            color: #4f46e5;
+
+            font-weight: bold;
+
+            margin-top: 12px;
+
+        }
+
+
+        /* RECOMMENDATION */
+
+        .recommendation {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f0fdf4,
+                    #ecfdf5
+                );
+
+            border-left:
+                5px solid #22c55e;
+
+        }
+
+
+        /* CHART */
+
+        .chart-card {
+
+            background: white;
+
+            border-radius: 22px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(40,40,80,0.07);
+
+            margin-bottom: 25px;
+
+        }
+
+        .chart-card h2 {
+
+            margin-bottom: 8px;
+
+        }
+
+        .chart-help {
+
+            color: #999;
+
+            font-size: 13px;
+
+            margin-bottom: 20px;
+
+        }
+
+        .chart-container {
+
+            height: 350px;
+
+        }
+
+
+        /* SUMMARY */
+
+        .trend-summary {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+
+        }
+
+        .summary-box {
+
+            background: #f8f8ff;
+
+            padding: 15px;
+
+            border-radius: 14px;
+
+            text-align: center;
+
+        }
+
+        .summary-box span {
+
+            display: block;
+
+            color: #999;
+
+            font-size: 12px;
+
+            margin-bottom: 5px;
+
+        }
+
+        .summary-box strong {
+
+            font-size: 18px;
+
+            color: #4f46e5;
+
+        }
+
+
+        /* BACK BUTTON */
+
+        .back-btn {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #7c3aed
+                );
+
+            color: white;
+
+            padding: 13px 22px;
+
+            border-radius: 12px;
+
+            font-weight: bold;
+
+        }
+
+        .back-btn:hover {
+
+            opacity: 0.9;
+
+        }
+
+
+        /* MOBILE */
+
+        @media(max-width:700px) {
+
+            .navbar {
+
+                padding: 15px 20px;
+
+            }
+
+            .container {
+
+                width: 94%;
+
+            }
+
+            .info-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .trend-summary {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .average-value {
+
+                font-size: 36px;
+
+            }
+
+            .page-header h1 {
+
+                font-size: 26px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+    <div class="logo">
+        🧠 AI Wellness
+    </div>
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="dashboard-btn"
+    >
+        ← Dashboard
+    </a>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div class="page-icon">
+            {{ icon }}
+        </div>
+
+        <h1>
+            {{ title }}
+        </h1>
+
+        <p>
+            Detailed wellness insights based on your recorded data.
+        </p>
+
+    </div>
+
+
+    <!-- AVERAGE -->
+
+    <div class="average-card">
+
+        <div class="average-label">
+            YOUR AVERAGE
+        </div>
+
+        <div class="average-value">
+            {{ value }}
+        </div>
+
+        <div class="average-text">
+            {{ title }} based on your recorded wellness data
+        </div>
+
+    </div>
+
+
+    <!-- INFORMATION -->
+
+    <div class="info-grid">
+
+
+        <div class="info-card">
+
+            <h2>
+                📊 What This Means
+            </h2>
+
+            <p>
+                {{ description }}
+            </p>
+
+            <div class="status">
+                {{ status }}
+            </div>
+
+        </div>
+
+
+        <div class="info-card recommendation">
+
+            <h2>
+                🤖 AI Recommendation
+            </h2>
+
+            <p>
+                {{ recommendation }}
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- TREND -->
+
+    <div class="chart-card">
+
+        <h2>
+            📈 {{ title }} Trend
+        </h2>
+
+        <p class="chart-help">
+            This chart shows how your {{ title|lower }} has changed over time.
+        </p>
+
+
+        <div class="trend-summary">
+
+            <div class="summary-box">
+
+                <span>
+                    Highest
+                </span>
+
+                <strong id="highest">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Average
+                </span>
+
+                <strong id="average">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Latest
+                </span>
+
+                <strong id="latest">
+                    --
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-container">
+
+            <canvas id="insightChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="back-btn"
+    >
+        ← Back to Dashboard
+    </a>
+
+
+</div>
+
+
+<script>
+
+
+    const labels =
+        {{ trend_labels | tojson }};
+
+    const values =
+        {{ trend_values | tojson }};
+
+
+    /* =========================
+       SUMMARY
+    ========================= */
+
+    if (values.length > 0) {
+
+        const highest =
+            Math.max(...values);
+
+        const average =
+            values.reduce(
+                (a,b) => a+b,
+                0
+            ) / values.length;
+
+        const latest =
+            values[values.length - 1];
+
+
+        document.getElementById(
+            "highest"
+        ).innerText =
+            highest.toFixed(1);
+
+
+        document.getElementById(
+            "average"
+        ).innerText =
+            average.toFixed(1);
+
+
+        document.getElementById(
+            "latest"
+        ).innerText =
+            latest.toFixed(1);
+
+    }
+
+
+    /* =========================
+       CHART
+    ========================= */
+
+    const canvas =
+        document.getElementById(
+            "insightChart"
+        );
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    const gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            350
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "rgba(99,102,241,0.30)"
+    );
+
+
+    gradient.addColorStop(
+        1,
+        "rgba(99,102,241,0.02)"
+    );
+
+
+    new Chart(canvas, {
+
+        type: "line",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [{
+
+                label: "{{ title }}",
+
+                data: values,
+
+                borderColor: "#6366f1",
+
+                backgroundColor: gradient,
+
+                fill: true,
+
+                tension: 0.4,
+
+                borderWidth: 3,
+
+                pointRadius: 5,
+
+                pointHoverRadius: 9,
+
+                pointBackgroundColor: "#ffffff",
+
+                pointBorderColor: "#6366f1",
+
+                pointBorderWidth: 3
+
+            }]
+
+        },
+
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            interaction: {
+
+                mode: "nearest",
+
+                intersect: false
+
+            },
+
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+
+                        maxTicksLimit: 8
+
+                    }
+
+                },
+
+
+                y: {
+
+                    beginAtZero: true
+
+                }
+
+            },
+
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                },
+
+
+                tooltip: {
+
+                    callbacks: {
+
+                        label: function(context) {
+
+                            return " " +
+                                context.raw;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+
+
+</body>
+
+</html>

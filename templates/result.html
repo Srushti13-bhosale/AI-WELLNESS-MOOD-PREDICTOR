@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Wellness Result</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .brand span {
+            color: #6366f1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            background: #6366f1;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 900px;
+            margin: 45px auto;
+        }
+
+        .result-card {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .emoji {
+            font-size: 75px;
+        }
+
+        .mood {
+            font-size: 38px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .confidence {
+            color: #6366f1;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .wellness {
+            margin: 25px auto;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 17px;
+            background: #eef2ff;
+        }
+
+        .wellness-value {
+            font-size: 35px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .consultant {
+            margin-top: 30px;
+            text-align: left;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 18px;
+        }
+
+        .consultant h2 {
+            margin-top: 0;
+        }
+
+        .message {
+            padding: 18px;
+            background: white;
+            border-radius: 12px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .advice {
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            background: #eef2ff;
+            line-height: 1.5;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 13px 20px;
+            border-radius: 11px;
+            font-weight: bold;
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn.secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .note {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="brand">
+        🌿 <span>AI Wellness</span>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="result-card">
+
+
+        <div class="emoji">
+            {{ emoji }}
+        </div>
+
+
+        <div class="mood">
+            {{ mood|title }}
+        </div>
+
+
+        {% if confidence is not none %}
+
+        <div class="confidence">
+            AI Confidence: {{ confidence }}%
+        </div>
+
+        {% endif %}
+
+
+        <div class="wellness">
+
+            <div>
+                Wellness Score
+            </div>
+
+            <div class="wellness-value">
+                {{ wellness_score }}/100
+            </div>
+
+        </div>
+
+
+        <!-- AI CONSULTANT -->
+
+        <div class="consultant">
+
+            <h2>
+                🤖 AI Wellness Consultant
+            </h2>
+
+
+            <div class="message">
+
+                {{ mood_message }}
+
+            </div>
+
+
+            <h3>
+                💡 Personalized Suggestions
+            </h3>
+
+
+            {% for suggestion in suggestions %}
+
+            <div class="advice">
+                💡 {{ suggestion }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="buttons">
+
+            <a
+                href="{{ url_for('predict') }}"
+                class="btn"
+            >
+                ✨ New Prediction
+            </a>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn secondary"
+            >
+                📊 Dashboard
+            </a>
+
+        </div>
+
+
+        <div class="note">
+
+            This application provides general wellness guidance
+            based on the entered information. It is not a medical
+            diagnosis or a substitute for professional healthcare.
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>
